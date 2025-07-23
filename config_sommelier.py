@@ -87,8 +87,8 @@ class Config:
     
     # Configuración Flask
     SECRET_KEY = 'sommelier-wine-recommendation-2025'
-    DEBUG = True
-    HOST = '127.0.0.1'
+    DEBUG = False
+    HOST = '0.0.0.0'
     PORT = 5001
     
     # Configuración de la base de datos PostgreSQL Neon
