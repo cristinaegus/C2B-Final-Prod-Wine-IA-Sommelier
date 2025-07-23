@@ -1,0 +1,198 @@
+/* Card Experiencia Premium */
+.premium-card-link {
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+.premium-card {
+  position: relative;
+  min-height: 180px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80")
+    center/cover no-repeat;
+  box-shadow: 0 8px 24px rgba(114, 47, 55, 0.18);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.premium-card:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(114, 47, 55, 0.28);
+}
+.premium-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(114, 47, 55, 0.45);
+  z-index: 1;
+}
+.premium-content {
+  z-index: 2;
+  color: #fff;
+  position: relative;
+  padding: 2.5rem 1rem 1.5rem 1rem;
+}
+.premium-content h5 {
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 1.3rem;
+}
+.premium-content p {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+/* Asegura que los enlaces tipo botón muestren el cursor de mano */
+a.btn,
+a.btn:visited,
+a.btn:active,
+a.btn:focus,
+a.btn:hover {
+  cursor: pointer;
+}
+/* Estilos para la página principal del clasificador de vinos */
+body {
+  background: linear-gradient(rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6)),
+    url("../images/womanDrinkingWine.jpg") center/cover no-repeat fixed;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.wine-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  margin: 2rem auto;
+  max-width: 1000px;
+}
+
+.wine-header {
+  background: linear-gradient(45deg, #722f37, #b03a2e);
+  color: white;
+  padding: 2rem;
+  border-radius: 20px 20px 0 0;
+  text-align: center;
+}
+
+.wine-form {
+  padding: 2rem;
+}
+
+.form-control {
+  border-radius: 10px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #722f37;
+  box-shadow: 0 0 0 0.2rem rgba(114, 47, 55, 0.25);
+}
+
+.btn-wine {
+  background: linear-gradient(45deg, #722f37, #b03a2e) !important;
+  border: 2px solid #722f37 !important;
+  border-radius: 10px !important;
+  padding: 1rem 2rem !important;
+  color: white !important;
+  font-weight: bold !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+}
+
+.btn-wine:hover {
+  background: linear-gradient(45deg, #b03a2e, #722f37) !important;
+  border-color: #b03a2e !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 15px rgba(114, 47, 55, 0.3) !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.btn-wine:focus,
+.btn-wine:active {
+  background: linear-gradient(45deg, #722f37, #b03a2e) !important;
+  border-color: #722f37 !important;
+  color: white !important;
+  box-shadow: 0 0 0 0.2rem rgba(114, 47, 55, 0.25) !important;
+}
+
+.btn-wine:disabled {
+  background: linear-gradient(45deg, #6c757d, #adb5bd) !important;
+  border-color: #6c757d !important;
+  color: white !important;
+  opacity: 0.65 !important;
+}
+
+.result-card {
+  background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 2rem;
+  border-left: 5px solid #722f37;
+}
+
+.wine-icon {
+  font-size: 3rem;
+  color: #722f37;
+  margin-bottom: 1rem;
+}
+
+.input-group-text {
+  background: #722f37;
+  color: white;
+  border: none;
+  border-radius: 10px 0 0 10px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.info-tooltip {
+  cursor: help;
+  color: #6c757d;
+}
+
+.parameter-card {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #722f37;
+}
+
+/* Estilos para iconos específicos */
+.large-icon {
+  font-size: 2rem;
+}
+
+.extra-large-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Estilos para botones adicionales */
+.btn-outline-info {
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  transition: all 0.3s ease;
+  border: 2px solid #17a2b8;
+  color: #17a2b8;
+}
+
+.btn-outline-info:hover {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+}

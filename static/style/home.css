@@ -1,0 +1,294 @@
+/* home.css - Estilos personalizados para la página principal Wine IA */
+
+.no-decoration-block {
+  text-decoration: none;
+  display: block;
+}
+
+/* Estilos personalizados para la barra de navegación */
+.navbar-custom {
+  background: linear-gradient(90deg, #722f37 0%, #8b3a3a 100%);
+  border-bottom: 2px solid #ffd700;
+  box-shadow: 0 2px 10px rgba(114, 47, 55, 0.15);
+}
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link,
+.navbar-custom .navbar-brand:focus,
+.navbar-custom .nav-link:focus {
+  color: #fff !important;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.navbar-custom .nav-link.active,
+.navbar-custom .nav-link:hover {
+  color: #ffd700 !important;
+  text-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+}
+.navbar-custom .navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.navbar-custom .navbar-toggler {
+  border: none;
+  background: #ffd700;
+}
+.navbar-custom .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28114,47,55,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Botones de Login y Registro */
+.btn-login {
+  background: transparent;
+  border: 2px solid #ffd700;
+  color: #ffd700;
+  border-radius: 25px;
+  padding: 8px 22px;
+  font-weight: 500;
+  margin-right: 8px;
+  transition: all 0.3s;
+}
+.btn-login:hover {
+  background: #ffd700;
+  color: #722f37;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+}
+.btn-register {
+  background: #ffd700;
+  color: #722f37;
+  border: 2px solid #ffd700;
+  border-radius: 25px;
+  padding: 8px 22px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.btn-register:hover {
+  background: #722f37;
+  color: #ffd700;
+  border: 2px solid #ffd700;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+  transform: translateY(-2px);
+}
+
+body {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+    url("/static/images/gardenWineDrinkers.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.hero-section {
+  padding: 100px 0;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-subtitle {
+  font-size: 1.4rem;
+  margin-bottom: 40px;
+  color: #f8f9fa;
+  opacity: 0.9;
+}
+
+.wine-icon {
+  font-size: 4rem;
+  color: #722f37;
+  margin-bottom: 30px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.row > .col-md-4 {
+  display: flex;
+  align-items: stretch;
+}
+.feature-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 30px;
+  margin: 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(114, 47, 55, 0.3);
+  border-color: #ffd700;
+}
+.feature-icon {
+  font-size: 3rem;
+  color: #ffd700;
+  margin-bottom: 20px;
+}
+
+.btn-cta {
+  background: linear-gradient(135deg, #722f37 0%, #8b3a3a 100%);
+  border: none;
+  color: white;
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  margin: 10px;
+}
+.btn-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(114, 47, 55, 0.4);
+  color: white;
+}
+
+.stats-section {
+  padding: 60px 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("/static/images/womanDrinkingWine.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  margin: 50px 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 20px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.stat-label {
+  font-size: 1.1rem;
+  color: #f8f9fa;
+  margin-top: 10px;
+}
+
+.footer-custom {
+  background: linear-gradient(rgba(114, 47, 55, 0.95), rgba(114, 47, 55, 0.95)),
+    url("/static/images/gardenWineDrinkers.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 30px 0;
+  margin-top: 50px;
+  border-top: 2px solid #8b3a3a;
+}
+
+/* Elemento decorativo para las imágenes */
+.wine-gallery {
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  margin: 20px 0;
+  cursor: pointer;
+  min-height: 200px;
+  max-height: 300px;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+.wine-gallery img {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  max-height: 300px;
+  object-fit: cover;
+  opacity: 0.3;
+  transition: all 0.3s ease;
+  filter: sepia(20%) saturate(1.2);
+  display: block;
+}
+
+.img-experiencia {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  max-height: 300px;
+  object-fit: cover;
+  opacity: 0.3;
+  transition: all 0.3s ease;
+  filter: sepia(20%) saturate(1.2);
+  display: block;
+}
+
+.wine-gallery:hover img,
+.wine-gallery:hover .img-experiencia {
+  opacity: 0.6;
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(114, 47, 55, 0.8),
+    rgba(139, 58, 58, 0.6)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* Chatbot Widget */
+#chatbot-messages {
+  height: 220px;
+  overflow-y: auto;
+  background: #222;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Experiencias: quitar estilos inline */
+.no-decoration-block.flex-fill {
+  width: 100%;
+}
+.wine-gallery.h-100 img {
+  height: 100%;
+  min-height: 200px;
+  max-height: 300px;
+}

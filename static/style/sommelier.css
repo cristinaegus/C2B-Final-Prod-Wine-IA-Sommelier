@@ -1,0 +1,279 @@
+/* Estilos específicos para Sommelier Inteligente */
+.sommelier-header {
+  background: linear-gradient(135deg, #722f37 0%, #8b3a3a 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 25px rgba(114, 47, 55, 0.3);
+}
+
+.sommelier-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  color: #ffd700;
+}
+
+.wine-card {
+  border: 2px solid #722f37;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #722f37 0%, #8b3a3a 100%) !important;
+  color: #fff !important;
+  padding: 20px;
+  margin: 10px 0;
+  box-shadow: 0 4px 15px rgba(114, 47, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.wine-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(114, 47, 55, 0.4);
+  border-color: #ffd700;
+}
+
+.recommendation-card {
+  background: linear-gradient(135deg, #2d5a27 0%, #3d7c47 100%);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 20px 0;
+  color: white;
+  box-shadow: 0 6px 20px rgba(45, 90, 39, 0.3);
+}
+
+.price-range {
+  background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  margin: 5px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.rating-badge {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #8b4513;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Página About - Estilos específicos */
+.info-section {
+  margin: 40px 0;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-section h2 {
+  color: #ffd700;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.info-card,
+.tech-card,
+.data-card,
+.algorithm-card {
+  background: linear-gradient(135deg, #2c1810 0%, #3d2317 100%);
+  border: 1px solid #722f37;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 15px 0;
+  height: 100%;
+}
+
+.info-card h4,
+.tech-card h4,
+.data-card h4,
+.algorithm-card h4 {
+  color: #ffd700;
+  margin-bottom: 15px;
+}
+
+.process-card {
+  background: linear-gradient(135deg, #1a472a 0%, #2d5a27 100%);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 15px 0;
+  text-align: center;
+  color: white;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.process-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(26, 71, 42, 0.4);
+}
+
+.process-icon {
+  font-size: 3rem;
+  color: #4caf50;
+  margin-bottom: 20px;
+}
+
+.metric-card {
+  background: linear-gradient(135deg, #722f37 0%, #8b3a3a 100%);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 15px 0;
+  text-align: center;
+  color: white;
+  height: 100%;
+}
+
+.metric-icon {
+  font-size: 2.5rem;
+  color: #ffd700;
+  margin-bottom: 15px;
+}
+
+.metric-card h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #ffd700;
+}
+
+.warning-card {
+  background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+  border: 2px solid #ff6b35;
+  border-radius: 15px;
+  padding: 25px;
+  margin: 20px 0;
+  color: white;
+}
+
+.warning-card h4 {
+  color: #ffed4e;
+  margin-bottom: 20px;
+}
+
+.warning-card ul li {
+  margin: 10px 0;
+  padding-left: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sommelier-header {
+    padding: 20px;
+  }
+
+  .sommelier-icon {
+    font-size: 2rem;
+  }
+
+  .wine-card {
+    margin: 5px 0;
+    padding: 15px;
+  }
+
+  .process-card,
+  .metric-card {
+    margin: 10px 0;
+    padding: 20px;
+  }
+
+  .process-icon {
+    font-size: 2rem;
+  }
+
+  .metric-icon {
+    font-size: 2rem;
+  }
+
+  .metric-card h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Animaciones adicionales */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wine-card,
+.recommendation-card,
+.process-card,
+.metric-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Efectos de hover mejorados */
+.btn-wine {
+  background: linear-gradient(135deg, #722f37 0%, #8b3a3a 100%) !important;
+  border: 2px solid #722f37 !important;
+  color: white !important;
+  border-radius: 10px !important;
+  padding: 12px 24px !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-wine:hover {
+  background: linear-gradient(135deg, #8b3a3a 0%, #722f37 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(114, 47, 55, 0.4);
+}
+
+/* Estilos para formularios */
+.parameter-card:hover {
+  border-color: #ffd700;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.form-control:focus {
+  border-color: #ffd700;
+  box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25);
+}
+
+/* Loading spinner personalizado */
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-login {
+  font-size: 1.1rem;
+  /* ...otros estilos existentes... */
+  background: transparent;
+  color: #ffd700 !important;
+  border: 2px solid #ffd700 !important;
+  font-weight: bold;
+  box-shadow: none;
+  transition: background 0.2s, color 0.2s;
+}
+/* Color amarillo para el icono dentro del botón Inicio */
+.btn-login i {
+  color: #ffd700 !important;
+}
+.btn-login:hover {
+  background: #ffd700;
+  color: #fff !important;
+  border-color: #ffd700;
+}
+.btn-login:hover i {
+  color: #fff !important;
+}

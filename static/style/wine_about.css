@@ -1,0 +1,124 @@
+/* Estilos para la página de información del clasificador de vinos */
+body {
+  background: url("../images/pexels-david-paisajevinos.jpg") center/cover
+    no-repeat fixed;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.wine-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  max-width: 900px;
+  padding: 2rem;
+}
+
+.wine-header {
+  background: linear-gradient(45deg, #722f37, #b03a2e);
+  color: white;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.feature-card {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #722f37;
+  color: #1a1a1a;
+}
+
+.tech-badge {
+  background: #722f37;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin: 0.2rem;
+  display: inline-block;
+}
+
+.btn-wine {
+  background: linear-gradient(45deg, #722f37, #b03a2e);
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-wine:hover {
+  background: linear-gradient(45deg, #b03a2e, #722f37);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Estilos para iconos específicos */
+.header-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Estilos para las tarjetas de información */
+.info-card {
+  background: rgba(114, 47, 55, 0.8);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #722f37;
+  color: white;
+}
+
+.tech-card {
+  background: rgba(23, 162, 184, 0.8);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #17a2b8;
+  color: white;
+}
+
+.data-card {
+  background: rgba(40, 167, 69, 0.8);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #28a745;
+  color: white;
+}
+
+.process-card {
+  background: rgba(114, 47, 55, 0.8);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  border: 2px solid #722f37;
+  color: white;
+}
+
+.algorithm-card {
+  background: rgba(255, 193, 7, 0.8);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #ffc107;
+  color: white;
+}
+
+.info-section {
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.process-icon {
+  font-size: 2.5rem;
+  color: #722f37;
+  margin-bottom: 1rem;
+}

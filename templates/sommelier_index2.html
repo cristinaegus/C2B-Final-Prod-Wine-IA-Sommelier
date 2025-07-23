@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🍷 Sommelier Inteligente - Recomendador de Vinos</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='style/sommelier.css') }}?v=2"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style/home.css" />
+    <style>
+      .wine-card {
+        border: 2px solid #722f37;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #2c1810 0%, #3d2317 100%);
+        padding: 20px;
+        margin: 10px 0;
+        box-shadow: 0 4px 15px rgba(114, 47, 55, 0.3);
+        transition: transform 0.3s ease;
+      }
+      .wine-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(114, 47, 55, 0.4);
+      }
+      .wine-name {
+        font-size: 1rem;
+        line-height: 1.3;
+        max-height: 2.6em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .sommelier-header {
+        background: linear-gradient(135deg, #722f37 0%, #8b3a3a 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .recommendation-card {
+        background: linear-gradient(135deg, #2d5a27 0%, #3d7c47 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px 0;
+        color: white;
+      }
+      .price-range {
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        display: inline-block;
+        margin: 5px;
+      }
+      .rating-badge {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #8b4513;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar de home.html -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/home">
+          <i class="fas fa-wine-glass-alt"></i> Wine IA
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-label="Abrir menú de navegación"
+          title="Abrir menú de navegación"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/home">
+                <i class="fas fa-home"></i> Inicio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/sommelier">
+                <i class="fas fa-user-tie"></i> Sommelier IA
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">
+                <i class="fas fa-info-circle"></i> Acerca de
+              </a>
+            </li>
+          </ul>
+          <div class="d-flex">
+            <a href="/login" class="btn btn-login me-2">
+              <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </a>
+            <a href="/register" class="btn btn-register">
+              <i class="fas fa-user-plus"></i> Registrarse
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid pt-80 bg-none-important">
+      <div class="wine-container">
+        <!-- Formulario de Recomendación -->
+        <div class="wine-form">
+          <h3 class="text-center mb-4">
+            <i class="fas fa-magic"></i> Encuentra tu Vino Perfecto
+          </h3>
+
+          <form method="POST" id="sommelierForm">
+            <div class="row">
+              <!-- Presupuesto -->
+              <div class="col-md-6 mb-3">
+                <div class="parameter-card">
+                  <label for="precio_min" class="form-label">
+                    <i class="fas fa-euro-sign"></i> Presupuesto Mínimo (€)
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">€</span>
+                    <input
+                      type="number"
+                      step="0.50"
+                      class="form-control"
+                      id="precio_min"
+                      name="precio_min"
+                      placeholder="10.00"
+                      min="5"
+                      max="100"
+                      value="15"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <div class="parameter-card">
+                  <label for="precio_max" class="form-label">
+                    <i class="fas fa-euro-sign"></i> Presupuesto Máximo (€)
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">€</span>
+                    <input
+                      type="number"
+                      step="0.50"
+                      class="form-control"
+                      id="precio_max"
+                      name="precio_max"
+                      placeholder="30.00"
+                      min="10"
+                      max="200"
+                      value="35"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tipo de Vino -->
+              <div class="col-md-6 mb-3">
+                <div class="parameter-card">
+                  <label for="tipo_vino" class="form-label">
+                    <i class="fas fa-wine-bottle"></i> Tipo de vino
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">🍷</span>
+                    <select
+                      class="form-control"
+                      id="tipo_vino"
+                      name="tipo_vino"
+                    >
+                      <option value="ambos" selected>Ambos</option>
+                      <option value="tinto">Tinto</option>
+                      <option value="blanco">Blanco</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rating Mínimo -->
+              <div class="col-md-6 mb-3">
+                <div class="parameter-card">
+                  <label for="rating_min" class="form-label">
+                    <i class="fas fa-star"></i> Rating Mínimo Deseado
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">⭐</span>
+                    <select
+                      class="form-control"
+                      id="rating_min"
+                      name="rating_min"
+                    >
+                      <option value="4.0">4.0+ (Muy Bueno)</option>
+                      <option value="4.1" selected>4.1+ (Excelente)</option>
+                      <option value="4.15">4.15+ (Sobresaliente)</option>
+                      <option value="4.2">4.2+ (Excepcional)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ocasión -->
+              <div class="col-md-6 mb-3">
+                <div class="parameter-card">
+                  <label for="ocasion" class="form-label">
+                    <i class="fas fa-calendar-alt"></i> Ocasión
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">🎉</span>
+                    <select class="form-control" id="ocasion" name="ocasion">
+                      <option value="general">Uso General</option>
+                      <option value="romantica">Cena Romántica</option>
+                      <option value="fiesta">Fiesta/Celebración</option>
+                      <option value="regalo">Para Regalo</option>
+                      <option value="cena">Cena Especial</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Preferencias de Gusto -->
+              <div class="col-md-12 mb-3">
+                <div class="parameter-card">
+                  <label for="gusto" class="form-label">
+                    <i class="fas fa-palette"></i> Preferencias de Gusto
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">👅</span>
+                    <select class="form-control" id="gusto" name="gusto">
+                      <option value="equilibrado">
+                        Equilibrado (recomendado)
+                      </option>
+                      <option value="premium">Premium (alta calidad)</option>
+                      <option value="economico">
+                        Económico (mejor precio)
+                      </option>
+                      <option value="popular">Popular (muchas reseñas)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-wine btn-lg me-3">
+                <i class="fas fa-search"></i> Encontrar Vinos Perfectos
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-lg"
+                onclick="loadExample()"
+              >
+                <i class="fas fa-lightbulb"></i> Ejemplo de Búsqueda
+              </button>
+            </div>
+          </form>
+
+          <!-- Resultado de Recomendación -->
+          {% if show_result %}
+          <div class="recommendation-card">
+            <div class="text-center">
+              {% if error %}
+              <i class="fas fa-exclamation-triangle text-danger large-icon"></i>
+              <h4 class="text-danger mt-2">{{ prediction_text }}</h4>
+              {% else %}
+              <i class="fas fa-trophy text-warning large-icon"></i>
+              <h4 class="mt-2">{{ prediction_text }}</h4>
+              <p class="{{ category_color }} fs-5 fw-bold">
+                {{ quality_category }}
+              </p>
+              <p class="text-light">{{ confidence }}</p>
+              <p class="text-warning">
+                <i class="fas fa-heart"></i> {{ ocasion_text }}
+              </p>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Vinos Recomendados -->
+          {% if vinos_recomendados %}
+          <div class="mt-4">
+            <h4 class="text-center mb-4">
+              <i class="fas fa-wine-bottle"></i> Vinos Recomendados Para Ti
+            </h4>
+
+            <div class="row">
+              {% for vino in vinos_recomendados %}
+              <div class="col-md-6 mb-3">
+                <div class="wine-card">
+                  <!-- Nombre completo del vino -->
+                  <div class="mb-2">
+                    <h6 class="text-warning mb-1 wine-name">
+                      <i class="fas fa-wine-glass"></i>
+                      {% if vino.nombre_completo %} {{
+                      vino.nombre_completo[:120] }}{% if
+                      vino.nombre_completo|length > 120 %}...{% endif %} {% elif
+                      vino.nombre_vino %} {% set wine_name =
+                      vino.nombre_vino.split(',')[0] if ',' in vino.nombre_vino
+                      else vino.nombre_vino %} {% set clean_name =
+                      wine_name.split('4,')[0] if '4,' in wine_name else
+                      wine_name %} {{ clean_name[:120] }}{% if clean_name|length
+                      > 120 %}...{% endif %} {% else %} Vino de {{ vino.bodega
+                      }} {% endif %}
+                    </h6>
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <small class="text-light">
+                        <i class="fas fa-industry"></i> {{ vino.bodega }}
+                      </small>
+                      <span class="price-range"
+                        >{{ "%.2f"|format(vino.precio_eur) }}€</span
+                      >
+                    </div>
+                  </div>
+
+                  <p class="text-light mb-2">
+                    <small>
+                      <i class="fas fa-map-marker-alt"></i> {{ vino.region }}
+                      <i class="fas fa-calendar ms-2"></i> {{ vino.año }}
+                    </small>
+                  </p>
+
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <span class="rating-badge">
+                      ⭐ {{ "%.2f"|format(vino.rating_limpio if
+                      vino.rating_limpio else vino.rating) }}
+                    </span>
+                    <small class="text-light">
+                      <i class="fas fa-comments"></i>
+                      {{ vino.num_reviews|int }} reviews
+                    </small>
+                  </div>
+
+                  {% if vino.categoria_calidad %}
+                  <div class="mt-2">
+                    <small class="badge bg-info"
+                      >{{ vino.categoria_calidad }}</small
+                    >
+                  </div>
+                  {% endif %}
+
+                  <div class="mt-2">
+                    <a
+                      href="{{ vino.url }}"
+                      target="_blank"
+                      class="btn btn-sm btn-outline-warning"
+                    >
+                      <i class="fas fa-external-link-alt"></i> Ver en Vivino
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %} {% endif %}
+
+          <!-- Información del Sistema -->
+          <div class="mt-4">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card text-dark">
+                  <div class="card-body">
+                    <h6 class="card-title">
+                      <i class="fas fa-brain"></i> Sistema Inteligente
+                    </h6>
+                    <p class="card-text small">
+                      Recomendaciones basadas en Machine Learning y datos reales
+                      de Vivino.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card text-dark">
+                  <div class="card-body">
+                    <h6 class="card-title">
+                      <i class="fas fa-database"></i> Datos Actualizados
+                    </h6>
+                    <p class="card-text small">
+                      Información actualizada de vinos españoles extraída de
+                      Vivino.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card text-dark">
+                  <div class="card-body">
+                    <h6 class="card-title">
+                      <i class="fas fa-target"></i> Personalizado
+                    </h6>
+                    <p class="card-text small">
+                      Recomendaciones adaptadas a tu presupuesto y ocasión.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enlace a página About -->
+          <div class="text-center mt-4">
+            <a href="/about" class="btn btn-outline-info">
+              <i class="fas fa-info-circle"></i> Cómo Funciona el Sommelier
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer de home.html -->
+    <footer class="footer-custom">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5><i class="fas fa-wine-glass-alt"></i> Wine IA</h5>
+            <p>
+              Sistema inteligente de recomendación de vinos españoles basado en
+              inteligencia artificial y datos reales de Vivino.
+            </p>
+          </div>
+          <div class="col-md-3">
+            <h6>Enlaces</h6>
+            <ul class="list-unstyled">
+              <li><a href="/home" class="text-white-50">Inicio</a></li>
+              <li>
+                <a href="/sommelier" class="text-white-50">Sommelier IA</a>
+              </li>
+              <li><a href="/about" class="text-white-50">Acerca de</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h6>Cuenta</h6>
+            <ul class="list-unstyled">
+              <li><a href="/login" class="text-white-50">Iniciar Sesión</a></li>
+              <li><a href="/register" class="text-white-50">Registrarse</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr class="my-4" />
+        <div class="text-center">
+          <p class="mb-0">
+            <i class="fas fa-copyright"></i> 2025 Wine IA - cegusquiza. Todos
+            los derechos reservados.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Función para cargar un ejemplo
+      function loadExample() {
+        document.getElementById("precio_min").value = "20";
+        document.getElementById("precio_max").value = "35";
+        document.getElementById("rating_min").value = "4.1";
+        document.getElementById("ocasion").value = "romantica";
+        document.getElementById("gusto").value = "equilibrado";
+      }
+
+      // Validación de presupuesto
+      document
+        .getElementById("precio_min")
+        .addEventListener("change", function () {
+          const min = parseFloat(this.value);
+          const max = parseFloat(document.getElementById("precio_max").value);
+          if (min >= max) {
+            document.getElementById("precio_max").value = (min + 10).toFixed(2);
+          }
+        });
+
+      document
+        .getElementById("precio_max")
+        .addEventListener("change", function () {
+          const max = parseFloat(this.value);
+          const min = parseFloat(document.getElementById("precio_min").value);
+          if (max <= min) {
+            document.getElementById("precio_min").value = (max - 10).toFixed(2);
+          }
+        });
+
+      // Validación en tiempo real
+      document.querySelectorAll('input[type="number"]').forEach((input) => {
+        input.addEventListener("input", function () {
+          if (this.checkValidity()) {
+            this.classList.remove("is-invalid");
+            this.classList.add("is-valid");
+          } else {
+            this.classList.remove("is-valid");
+            this.classList.add("is-invalid");
+          }
+        });
+      });
+
+      // Animación de carga del formulario
+      document
+        .getElementById("sommelierForm")
+        .addEventListener("submit", function () {
+          const submitBtn = this.querySelector('button[type="submit"]');
+          submitBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+          submitBtn.disabled = true;
+        });
+    </script>
+  </body>
+</html>

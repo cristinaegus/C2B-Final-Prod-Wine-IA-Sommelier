@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🍷 Wine IA - Sistema Inteligente de Recomendación de Vinos</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style/home.css" />
+  </head>
+  <body>
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/home">
+          <i class="fas fa-wine-glass-alt"></i> Wine IA
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-label="Abrir menú de navegación"
+          title="Abrir menú de navegación"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/home">
+                <i class="fas fa-home"></i> Inicio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/sommelier">
+                <i class="fas fa-user-tie"></i> Sommelier IA
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">
+                <i class="fas fa-info-circle"></i> Acerca de
+              </a>
+            </li>
+          </ul>
+
+          <!-- Botones de Login y Registro -->
+          <div class="d-flex">
+            <a href="/login" class="btn btn-login me-2">
+              <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </a>
+            <a href="/register" class="btn btn-register">
+              <i class="fas fa-user-plus"></i> Registrarse
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sección Hero -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="wine-icon">
+          <i class="fas fa-wine-bottle"></i>
+        </div>
+        <h1 class="hero-title">Wine IA</h1>
+        <p class="hero-subtitle">
+          Sistema Inteligente de Recomendación de Vinos Españoles
+          <br />
+          Descubre tu vino perfecto con Inteligencia Artificial
+        </p>
+
+        <div class="mt-4">
+          <a href="/sommelier" class="btn btn-cta">
+            <i class="fas fa-magic"></i> Prueba el Sommelier IA
+          </a>
+          <a href="/about" class="btn btn-cta">
+            <i class="fas fa-question-circle"></i> Saber Más
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Sección de Características -->
+    <section class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <h4>Inteligencia Artificial</h4>
+            <p>
+              Nuestro sistema utiliza algoritmos avanzados de Machine Learning
+              para analizar y recomendar vinos basándose en tus preferencias.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-database"></i>
+            </div>
+            <h4>Base de Datos Actualizada</h4>
+            <p>
+              Información actualizada de vinos españoles extraída directamente
+              de Vivino con ratings, precios y características detalladas.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-target"></i>
+            </div>
+            <h4>Recomendaciones Personalizadas</h4>
+            <p>
+              Obtén sugerencias precisas adaptadas a tu presupuesto, ocasión y
+              preferencias de gusto específicas.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Experiencias debajo de las características -->
+      <div class="row align-items-stretch mt-4">
+        <div class="col-md-6 d-flex">
+          <a href="https://turismodevino.com/" target="_blank" rel="noopener" class="no-decoration-block flex-fill">
+            <div class="wine-gallery h-100">
+              <img src="/static/images/womanDrinkingWine.jpg" alt="Degustación profesional de vinos" class="img-experiencia" />
+              <div class="image-overlay">
+                <div class="text-center w-100">
+                  <i class="fas fa-wine-glass fa-2x mb-2"></i><br />
+                  Experiencia Premium
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-6 d-flex">
+          <div class="wine-gallery flex-fill h-100">
+            <img src="/static/images/gardenWineDrinkers.jpg" alt="Momentos especiales con vino" class="img-experiencia" />
+            <div class="image-overlay">
+              <div class="text-center w-100">
+                <i class="fas fa-users fa-2x mb-2"></i><br />
+                Momentos Únicos
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      </div>
+    </section>
+
+    <!-- Sección de Llamada a la Acción -->
+    <section class="text-center py-5">
+      <div class="container">
+        <h2 class="mb-4">¿Listo para encontrar tu vino perfecto?</h2>
+        <p class="lead mb-4">
+          Únete a miles de usuarios que ya confían en Wine IA para descubrir
+          vinos excepcionales adaptados a sus gustos.
+        </p>
+        <a href="/register" class="btn btn-cta btn-lg">
+          <i class="fas fa-rocket"></i> Comenzar Ahora
+        </a>
+      </div>
+    </section>
+
+    <!-- Chatbot Widget -->
+    <section class="container py-4">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card bg-dark text-white shadow-lg">
+            <div class="card-header bg-secondary">
+              <i class="fas fa-robot"></i> Pregunta a nuestro Sommelier IA
+            </div>
+            <div class="card-body">
+              <div id="chatbot-messages"></div>
+              <div class="input-group">
+                <input type="text" id="chatbot-user-input" class="form-control" placeholder="Escribe tu mensaje..." aria-label="Mensaje">
+                <button class="btn btn-primary" type="button" onclick="sendChatbotMessage()">Enviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer class="footer-custom">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5><i class="fas fa-wine-glass-alt"></i> Wine IA</h5>
+            <p>
+              Sistema inteligente de recomendación de vinos españoles basado en
+              inteligencia artificial y datos reales de Vivino.
+            </p>
+          </div>
+          <div class="col-md-3">
+            <h6>Enlaces</h6>
+            <ul class="list-unstyled">
+              <li><a href="/home" class="text-white-50">Inicio</a></li>
+              <li>
+                <a href="/sommelier" class="text-white-50">Sommelier IA</a>
+              </li>
+              <li><a href="/about" class="text-white-50">Acerca de</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h6>Cuenta</h6>
+            <ul class="list-unstyled">
+              <li><a href="/login" class="text-white-50">Iniciar Sesión</a></li>
+              <li><a href="/register" class="text-white-50">Registrarse</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr class="my-4" />
+        <div class="text-center">
+          <p class="mb-0">
+            <i class="fas fa-copyright"></i> 2025 Wine IA - cegusquiza. Todos
+            los derechos reservados.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chatbot JS -->
+    <script>
+      function appendChatbotMessage(sender, text) {
+        const chat = document.getElementById('chatbot-messages');
+        const msgDiv = document.createElement('div');
+        msgDiv.innerHTML = `<b>${sender}:</b> ${text}`;
+        msgDiv.style.marginBottom = '8px';
+        chat.appendChild(msgDiv);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      function sendChatbotMessage() {
+        const input = document.getElementById('chatbot-user-input');
+        const message = input.value.trim();
+        if (!message) return;
+        appendChatbotMessage('Tú', message);
+        input.value = '';
+        fetch('/api/chatbot', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({message})
+        })
+        .then(res => res.json())
+        .then(data => {
+          appendChatbotMessage('Bot', data.response);
+        })
+        .catch(() => {
+          appendChatbotMessage('Bot', 'Error de conexión.');
+        });
+      }
+
+      // Permitir enviar con Enter
+      document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById('chatbot-user-input');
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') sendChatbotMessage();
+        });
+      });
+    </script>
+    <script>
+      // Efectos de navegación suave
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Efecto de parallax suave en el scroll
+      window.addEventListener("scroll", () => {
+        const scrolled = window.pageYOffset;
+        const parallax = document.querySelector(".hero-section");
+        const speed = scrolled * 0.5;
+        parallax.style.transform = `translateY(${speed}px)`;
+      });
+
+      // Animación de contadores
+      const animateCounters = () => {
+        const counters = document.querySelectorAll(".stat-number");
+        const speed = 200;
+
+        counters.forEach((counter) => {
+          const updateCount = () => {
+            const target = counter.innerText;
+            const current = +counter.getAttribute("data-count") || 0;
+            const increment = target / speed;
+
+            if (current < target) {
+              counter.setAttribute(
+                "data-count",
+                Math.ceil(current + increment)
+              );
+              counter.innerText = Math.ceil(current + increment);
+              setTimeout(updateCount, 1);
+            } else {
+              counter.innerText = target;
+            }
+          };
+          updateCount();
+        });
+      };
+
+      // Ejecutar animación cuando la sección de estadísticas sea visible
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateCounters();
+            observer.unobserve(entry.target);
+          }
+        });
+      });
+
+      const statsSection = document.querySelector(".stats-section");
+      if (statsSection) {
+        observer.observe(statsSection);
+      }
+    </script>
+  </body>
+</html>

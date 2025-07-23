@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🍷 Wine IA - Registro</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(
+          135deg,
+          #2c1810 0%,
+          #3d2317 50%,
+          #722f37 100%
+        );
+        min-height: 100vh;
+        color: white;
+        font-family: "Arial", sans-serif;
+      }
+
+      .register-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0;
+      }
+
+      .register-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        max-width: 450px;
+        width: 100%;
+
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .register-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .wine-icon {
+        font-size: 3rem;
+        color: #ffd700;
+        margin-bottom: 20px;
+      }
+
+      .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        border-radius: 10px;
+        padding: 12px 15px;
+      }
+
+      .form-control:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #ffd700;
+        box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+        color: white;
+      }
+
+      .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .btn-register {
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 10px;
+        width: 100%;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+        color: white;
+      }
+
+      .password-strength {
+        margin-top: 5px;
+        font-size: 0.8rem;
+      }
+
+      .strength-weak {
+        color: #dc3545;
+      }
+      .strength-medium {
+        color: #ffc107;
+      }
+      .strength-strong {
+        color: #28a745;
+      }
+
+      .terms-text {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .back-link {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: #ffd700;
+        text-decoration: none;
+      }
+
+      .divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+      }
+
+      .divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .divider span {
+        background: linear-gradient(
+          135deg,
+          #2c1810 0%,
+          #3d2317 50%,
+          #722f37 100%
+        );
+        padding: 0 15px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .btn-social {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-social:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+      }
+
+      .login-link {
+        color: #ffd700;
+        text-decoration: none;
+      }
+
+      .login-link:hover {
+        color: #ffed4e;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/home" class="back-link">
+      <i class="fas fa-arrow-left"></i> Volver al Inicio
+    </a>
+
+    <div class="register-container">
+      <div class="register-card">
+        <div class="register-header">
+          <div class="wine-icon">
+            <i class="fas fa-wine-glass-alt"></i>
+          </div>
+          <h2>Crear Cuenta</h2>
+          <p>Únete a la comunidad de Wine IA</p>
+        </div>
+
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <div
+          class="alert alert-{{ 'danger' if category == 'error' else ('success' if category == 'success' else 'info') }} alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            title="Cerrar"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+        {% endfor %} {% endif %} {% endwith %}
+
+        <form id="registerForm" method="POST">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="firstName" class="form-label">
+                <i class="fas fa-user"></i> Nombre
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="firstName"
+                name="firstName"
+                placeholder="Tu nombre"
+                required
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lastName" class="form-label">
+                <i class="fas fa-user"></i> Apellido
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="lastName"
+                name="lastName"
+                placeholder="Tu apellido"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">
+              <i class="fas fa-envelope"></i> Correo Electrónico
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="tu@email.com"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">
+              <i class="fas fa-lock"></i> Contraseña
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Crea una contraseña segura"
+              required
+            />
+            <div id="passwordStrength" class="password-strength"></div>
+          </div>
+
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">
+              <i class="fas fa-lock"></i> Confirmar Contraseña
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Repite tu contraseña"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="birthDate" class="form-label">
+              <i class="fas fa-calendar"></i> Fecha de Nacimiento
+            </label>
+            <input
+              type="date"
+              class="form-control"
+              id="birthDate"
+              name="birthDate"
+              required
+            />
+            <small class="terms-text">
+              Debes ser mayor de 18 años para usar Wine IA
+            </small>
+          </div>
+
+          <div class="mb-3 form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="terms"
+              name="terms"
+              required
+            />
+            <label class="form-check-label terms-text" for="terms">
+              Acepto los
+              <a href="#" class="login-link">Términos y Condiciones</a>
+              y la
+              <a href="#" class="login-link">Política de Privacidad</a>
+            </label>
+          </div>
+
+          <div class="mb-3 form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="newsletter"
+              name="newsletter"
+            />
+            <label class="form-check-label terms-text" for="newsletter">
+              Quiero recibir recomendaciones y noticias sobre vinos
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-register">
+            <i class="fas fa-user-plus"></i> Crear Cuenta
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>o regístrate con</span>
+        </div>
+
+        <div class="social-login mb-3">
+          <a href="#" class="btn-social">
+            <i class="fab fa-google"></i> Continuar con Google
+          </a>
+          <a href="#" class="btn-social">
+            <i class="fab fa-facebook"></i> Continuar con Facebook
+          </a>
+        </div>
+
+        <div class="text-center">
+          <p>
+            ¿Ya tienes cuenta?
+            <a href="/login" class="login-link"> Inicia sesión aquí </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Validación de fortaleza de contraseña
+      document
+        .getElementById("password")
+        .addEventListener("input", function () {
+          const password = this.value;
+          const strengthDiv = document.getElementById("passwordStrength");
+
+          if (password.length === 0) {
+            strengthDiv.innerHTML = "";
+            return;
+          }
+
+          let strength = 0;
+          const checks = [
+            password.length >= 8,
+            /[a-z]/.test(password),
+            /[A-Z]/.test(password),
+            /[0-9]/.test(password),
+            /[^A-Za-z0-9]/.test(password),
+          ];
+
+          strength = checks.filter(Boolean).length;
+
+          if (strength <= 2) {
+            strengthDiv.innerHTML =
+              '<span class="strength-weak">Contraseña débil</span>';
+          } else if (strength <= 4) {
+            strengthDiv.innerHTML =
+              '<span class="strength-medium">Contraseña media</span>';
+          } else {
+            strengthDiv.innerHTML =
+              '<span class="strength-strong">Contraseña fuerte</span>';
+          }
+        });
+
+      // Validación de confirmación de contraseña
+      document
+        .getElementById("confirmPassword")
+        .addEventListener("input", function () {
+          const password = document.getElementById("password").value;
+          const confirmPassword = this.value;
+
+          if (confirmPassword.length > 0) {
+            if (password === confirmPassword) {
+              this.style.borderColor = "#28a745";
+            } else {
+              this.style.borderColor = "#dc3545";
+            }
+          }
+        });
+
+      // Validación de edad
+      document
+        .getElementById("birthDate")
+        .addEventListener("change", function () {
+          const birthDate = new Date(this.value);
+          const today = new Date();
+          const age = today.getFullYear() - birthDate.getFullYear();
+          const monthDiff = today.getMonth() - birthDate.getMonth();
+
+          if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+          ) {
+            age--;
+          }
+
+          if (age < 18) {
+            alert("Debes ser mayor de 18 años para registrarte en Wine IA.");
+            this.value = "";
+          }
+        });
+
+      // Envío del formulario
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (e) {
+          const password = document.getElementById("password").value;
+          const confirmPassword =
+            document.getElementById("confirmPassword").value;
+          const terms = document.getElementById("terms").checked;
+
+          if (password !== confirmPassword) {
+            e.preventDefault();
+            alert("Las contraseñas no coinciden.");
+            return;
+          }
+
+          if (!terms) {
+            e.preventDefault();
+            alert("Debes aceptar los términos y condiciones.");
+            return;
+          }
+
+          // Permitir envío del formulario - se procesará en el servidor
+        });
+    </script>
+  </body>
+</html>
