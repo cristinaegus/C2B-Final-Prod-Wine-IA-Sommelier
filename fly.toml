@@ -1,6 +1,5 @@
-app = "wine-ia-sommelier"
 
-primary_region = "mad" # Cambia a la región que prefieras
+app = "wine-ia-sommelier"
 region = "cdg"
 
 [build]
