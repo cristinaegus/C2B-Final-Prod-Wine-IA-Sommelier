@@ -1,26 +1,23 @@
-# fly.toml app configuration file generated for wine-ia-sommelier on 2025-07-23T14:46:53+02:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
 
-app = 'wine-ia-sommelier'
-primary_region = 'lhr'
+# fly.toml app configuration file for wine-ia-production
+app = "wine-ia-production"
+primary_region = "lhr"
 
 [build]
-  dockerfile = 'Dockerfile'
+  dockerfile = "Dockerfile"
 
 [env]
-  PORT = '5001'
+  PORT = "5001"
 
 [http_service]
   internal_port = 5001
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = "stop"
   auto_start_machines = true
   min_machines_running = 0
-  processes = ['app']
+  processes = ["app"]
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
+  memory = "1gb"
+  cpu_kind = "shared"
   cpus = 1

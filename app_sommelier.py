@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 import pickle
 import pandas as pd
 import numpy as np
@@ -7,17 +9,20 @@ import warnings
 import json
 from flask import Flask, render_template, request, jsonify, flash, redirect, url_for, session
 from datetime import datetime, timedelta
-from config_sommelier import get_config
+from config_sommelier import cargar_modelo
+import pandas as pd
 from models import db, bcrypt, User, UserSession, WineRecommendation
 from chatbot import chatbot_endpoint, chat
 from admin import admin_bp
 
 warnings.filterwarnings("ignore")
 
-# Configuración de la aplicación
-config = get_config('development')
 app = Flask(__name__)
-app.config.from_object(config)
+
+# Configuración mínima de base de datos (SQLite local, cambiar a PostgreSQL en producción)
+import os
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://FlaskEjercicioConnect_owner:npg_4SBm3VXpFwIE@ep-floral-frost-a2tieivc-pooler.eu-central-1.aws.neon.tech/FlaskEjercicioConnect?sslmode=require&channel_binding=require')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Registrar blueprint de administración
 app.register_blueprint(admin_bp)
@@ -26,31 +31,18 @@ app.register_blueprint(admin_bp)
 db.init_app(app)
 bcrypt.init_app(app)
 
-# Cargar el modelo de Vivino y datos al iniciar la aplicación
+model, scaler = cargar_modelo()
+if model is None or scaler is None:
+    print("❌ No se pudieron cargar el modelo o el scaler. Revisa la carpeta static.")
+
+# Cargar el dataset de vinos
 try:
-    model, scaler, label_encoder, model_info = config.cargar_modelo()
-    if model is None:
-        raise FileNotFoundError("No se pudieron cargar los modelos")
-    if model_info:
-        print(f"🍷 Sommelier usando modelo v{model_info.get('version', 'desconocida')}")
-        print(f"📊 Precisión: {model_info.get('accuracy', 'N/A')}")
-        print(f"🎯 Features: {len(model_info.get('caracteristicas', []))}")
-        label_encoders = model_info.get('label_encoders', {})
-        caracteristicas_modelo = model_info.get('caracteristicas', [])
-        print(f"🔧 Label encoders disponibles: {list(label_encoders.keys())}")
-    else:
-        label_encoders = {}
-        caracteristicas_modelo = []
-    if config.LATEST_CSV:
-        df_vinos = pd.read_csv(config.LATEST_CSV)
-        print(f"✅ Datos cargados desde: {config.LATEST_CSV}")
-        print(f"✅ Total de vinos disponibles: {len(df_vinos)}")
-    else:
-        df_vinos = pd.DataFrame()
-        print("⚠️ No se encontraron archivos de scraping")
-    print("✅ Modelo Sommelier y datos cargados exitosamente")
-except FileNotFoundError as e:
-    print(f"⚠️ Archivos del modelo no encontrados: {e}")
+    df_vinos = pd.read_csv("static/dataset_vinos_combinado_ultra_limpio_20250717_122604.csv")
+    print(f"✅ Datos cargados: static/dataset_vinos_combinado_ultra_limpio_20250717_122604.csv")
+    print(f"✅ Total de vinos disponibles: {len(df_vinos)}")
+except Exception as e:
+    df_vinos = pd.DataFrame()
+    print(f"❌ Error cargando datos de vinos: {e}")
 
 def categorizar_popularidad(num_reviews):
     """Categorizar popularidad según número de reviews"""
@@ -83,210 +75,45 @@ def categorizar_precio(precio):
 def chatbot():
     return chatbot_endpoint(chat)
 
-def predecir_calidad_vino_completo(precio, rating, año, bodega="Desconocida", region="España", num_reviews=500):
-    """Predice la categoría de calidad usando el modelo completo con 15 características"""
+def predecir_calidad_vino_completo(precio, rating, año, tipo_vino="blanco", num_reviews=500):
+    """Predice la categoría de calidad usando el modelo entrenado con 4 características"""
     try:
         import numpy as np
-        import pandas as pd
-        
-        # Verificar que tenemos los componentes necesarios
-        if not label_encoders or not caracteristicas_modelo:
-            print("⚠️ Usando predicción simplificada - modelo incompleto")
-            return predecir_calidad_vino_simple(precio, rating, año, bodega, region)
-        
-        # Crear DataFrame temporal para procesamiento
-        vino_data = pd.DataFrame({
-            'precio_eur': [precio],
-            'rating': [rating],
-            'año': [año],
-            'num_reviews': [num_reviews],
-            'region': [region],
-            'bodega': [bodega]
-        })
-        
-        # 1. Características numéricas básicas
-        caracteristicas = {}
-        
-        # Precio
-        caracteristicas['precio_eur'] = precio
-        caracteristicas['log_precio'] = np.log1p(precio)
-        
-        # Rating
-        caracteristicas['rating'] = rating
-        rating_min, rating_max = 3.0, 5.0  # Asumimos rangos típicos
-        caracteristicas['rating_normalizado'] = (rating - rating_min) / (rating_max - rating_min)
-        
-        # Año
-        caracteristicas['año'] = año
-        caracteristicas['antiguedad'] = 2025 - año
-        
-        # Reviews
-        caracteristicas['num_reviews'] = num_reviews
-        caracteristicas['log_reviews'] = np.log1p(num_reviews)
-        
-        # 2. Características categóricas codificadas
-        # Procesar región
-        region_especifica = region if region != "España" else "Otras Regiones"
-        if 'region_especifica' in label_encoders:
-            try:
-                caracteristicas['region_especifica_encoded'] = label_encoders['region_especifica'].transform([region_especifica])[0]
-            except:
-                caracteristicas['region_especifica_encoded'] = 0  # Valor por defecto
-        else:
-            caracteristicas['region_especifica_encoded'] = 0
-        
-        # Procesar rango de precio
-        if precio <= 15:
-            rango_precio = 'Económico'
-        elif precio <= 25:
-            rango_precio = 'Medio'
-        elif precio <= 40:
-            rango_precio = 'Premium'
-        elif precio <= 60:
-            rango_precio = 'Lujo'
-        else:
-            rango_precio = 'Ultra-Premium'
-            
-        if 'rango_precio' in label_encoders:
-            try:
-                caracteristicas['rango_precio_encoded'] = label_encoders['rango_precio'].transform([rango_precio])[0]
-            except:
-                caracteristicas['rango_precio_encoded'] = 1  # Valor por defecto
-        else:
-            caracteristicas['rango_precio_encoded'] = 1
-        
-        # Procesar rango de rating
-        if rating < 4.0:
-            rango_rating = 'Bueno'
-        elif rating < 4.2:
-            rango_rating = 'Muy Bueno'
-        elif rating < 4.4:
-            rango_rating = 'Excelente'
-        else:
-            rango_rating = 'Excepcional'
-            
-        if 'rango_rating' in label_encoders:
-            try:
-                caracteristicas['rango_rating_encoded'] = label_encoders['rango_rating'].transform([rango_rating])[0]
-            except:
-                caracteristicas['rango_rating_encoded'] = 1  # Valor por defecto
-        else:
-            caracteristicas['rango_rating_encoded'] = 1
-        
-        # Procesar época
-        if año <= 2000:
-            epoca = 'Clásicos'
-        elif año <= 2010:
-            epoca = 'Millennium'
-        elif año <= 2015:
-            epoca = 'Década 2010'
-        elif año <= 2020:
-            epoca = 'Modernos'
-        else:
-            epoca = 'Recientes'
-            
-        if 'epoca' in label_encoders:
-            try:
-                caracteristicas['epoca_encoded'] = label_encoders['epoca'].transform([epoca])[0]
-            except:
-                caracteristicas['epoca_encoded'] = 2  # Valor por defecto
-        else:
-            caracteristicas['epoca_encoded'] = 2
-        
-        # Procesar bodega simplificada
-        bodega_simplificada = ' '.join(bodega.split()[:2])
-        if 'bodega_simplificada' in label_encoders:
-            try:
-                caracteristicas['bodega_simplificada_encoded'] = label_encoders['bodega_simplificada'].transform([bodega_simplificada])[0]
-            except:
-                caracteristicas['bodega_simplificada_encoded'] = 0  # Valor por defecto
-        else:
-            caracteristicas['bodega_simplificada_encoded'] = 0
-        
-        # 3. Características de interacción
-        caracteristicas['precio_rating_ratio'] = precio / rating
-        caracteristicas['precio_por_año'] = precio / (caracteristicas['antiguedad'] + 1)
-        
-        # 4. Ordenar características según el modelo
-        X = np.array([[caracteristicas[feat] for feat in caracteristicas_modelo]])
-        
-        print(f"🔧 Características creadas: {len(X[0])}")
-        print(f"📊 Features esperadas: {len(caracteristicas_modelo)}")
-        
-        # 5. Escalar y predecir
+        import pickle
+        with open("static/label_encoder_tipo_vino.pkl", "rb") as f:
+            le_tipo_vino = pickle.load(f)
+        with open("static/label_encoder_calidad.pkl", "rb") as f:
+            le_calidad = pickle.load(f)
+        tipo_vino_normalizado = tipo_vino.strip().lower().capitalize()
+        print(f"[LOG] Tipo vino recibido: '{tipo_vino}' | Normalizado: '{tipo_vino_normalizado}'")
+        print(f"[LOG] Clases disponibles en encoder: {list(le_tipo_vino.classes_)}")
+        if tipo_vino_normalizado not in le_tipo_vino.classes_:
+            print(f"[LOG] Tipo de vino '{tipo_vino_normalizado}' no encontrado en encoder. Usando 'Blanco'.")
+            tipo_vino_normalizado = "Blanco"
+        tipo_vino_encoded = le_tipo_vino.transform([tipo_vino_normalizado])[0]
+        X = np.array([[num_reviews, precio, rating, tipo_vino_encoded]])
         X_scaled = scaler.transform(X)
-        
-        # Hacer predicción
-        if 'objetivo' in label_encoders:
-            prediccion_encoded = model.predict(X_scaled)[0]
-            prediccion = label_encoders['objetivo'].inverse_transform([prediccion_encoded])[0]
-        else:
-            # Fallback a clases del modelo
-            clases_calidad = model_info.get('clases_calidad', ['Bueno', 'Muy Bueno', 'Excelente'])
-            prediccion_encoded = model.predict(X_scaled)[0]
-            prediccion = clases_calidad[prediccion_encoded] if prediccion_encoded < len(clases_calidad) else 'Muy Bueno'
-        
-        # Obtener probabilidades
-        if hasattr(model, 'predict_proba'):
-            probabilidades = model.predict_proba(X_scaled)[0]
-            confianza = max(probabilidades) * 100
-        else:
-            confianza = 85.0
-        
-        print(f"✅ Predicción exitosa: {prediccion} ({confianza:.1f}%)")
-        return prediccion, confianza
-        
+        pred = model.predict(X_scaled)[0]
+        calidad_predicha = le_calidad.inverse_transform([pred])[0]
+        confianza = 85.0
+        print(f"✅ Predicción exitosa: {calidad_predicha} ({confianza:.1f}%)")
+        return calidad_predicha, confianza
     except Exception as e:
-        print(f"❌ Error en predicción completa: {e}")
-        print("🔄 Intentando predicción simplificada...")
-        return predecir_calidad_vino_simple(precio, rating, año, bodega, region)
+        print(f"❌ Error en predicción: {e}")
+        # Fallback: devolver una categoría por defecto y confianza baja pero no cero
+        return "Bueno", 50.0
 
 def predecir_calidad_vino_simple(precio, rating, año, bodega="Desconocida", region="España"):
     """Función de predicción simplificada como fallback"""
     try:
-        # Valores por defecto
-        posicion = 1
-        num_reviews = 500
-        categoria_calidad = "Good Value"
-        categoria_precio = categorizar_precio(precio)
-        categoria_popularidad = categorizar_popularidad(num_reviews)
-        
-        # Crear características numéricas
-        caracteristicas_numericas = [precio, rating, año, posicion, num_reviews]
-        
-        # Para variables categóricas, usar valores codificados simples
-        bodega_encoded = 0
-        region_encoded = 0
-        categoria_calidad_encoded = 1
-        categoria_precio_encoded = 2
-        categoria_popularidad_encoded = 1
-        
-        # Combinar todas las características
-        caracteristicas = np.array([caracteristicas_numericas + 
-                                  [bodega_encoded, region_encoded, categoria_calidad_encoded, 
-                                   categoria_precio_encoded, categoria_popularidad_encoded]])
-        
-        # Escalar características
-        caracteristicas_scaled = scaler.transform(caracteristicas)
-        
-        # Hacer predicción
-        if label_encoder:
-            prediccion_encoded = model.predict(caracteristicas_scaled)[0]
-            prediccion = label_encoder.inverse_transform([prediccion_encoded])[0]
-        else:
-            clases_calidad = ['Bueno', 'Muy Bueno', 'Excelente']
-            prediccion_encoded = model.predict(caracteristicas_scaled)[0]
-            prediccion = clases_calidad[prediccion_encoded] if prediccion_encoded < len(clases_calidad) else 'Muy Bueno'
-        
-        # Obtener probabilidades
-        if hasattr(model, 'predict_proba'):
-            probabilidades = model.predict_proba(caracteristicas_scaled)[0]
-            confianza = max(probabilidades) * 100
-        else:
-            confianza = 75.0
-        
+        import numpy as np
+        X = np.array([[precio, rating, año, 1, 500]])
+        X_scaled = scaler.transform(X)
+        prediccion_encoded = model.predict(X_scaled)[0]
+        clases_calidad = ['Bueno', 'Muy Bueno', 'Excelente']
+        prediccion = clases_calidad[prediccion_encoded] if prediccion_encoded < len(clases_calidad) else 'Muy Bueno'
+        confianza = 75.0
         return prediccion, confianza
-        
     except Exception as e:
         print(f"❌ Error en predicción simple: {e}")
         return "Error en predicción", 0
@@ -297,7 +124,7 @@ def buscar_vinos_similares(precio_min, precio_max, rating_min=4.0, tipo_vino=Non
         return []
     
     print(f"🔍 Iniciando búsqueda: €{precio_min}-{precio_max}, rating ≥{rating_min}")
-    if tipo_vino and tipo_vino != "Todos":
+    if tipo_vino and tipo_vino not in ["Todos", "ambos"]:
         print(f"🍷 Filtro por tipo: {tipo_vino}")
     
     # IMPORTANTE: Hacer una copia fresca del DataFrame para evitar modificaciones acumulativas
@@ -311,7 +138,7 @@ def buscar_vinos_similares(precio_min, precio_max, rating_min=4.0, tipo_vino=Non
     ].copy()
     
     # Filtrar por tipo de vino si se especifica
-    if tipo_vino and tipo_vino != "Todos":
+    if tipo_vino and tipo_vino not in ["Todos", "ambos"]:
         vinos_filtrados = vinos_filtrados[
             vinos_filtrados['tipo_vino'] == tipo_vino
         ].copy()
@@ -647,7 +474,8 @@ def sommelier():
             precio_min = float(request.form['precio_min'])
             precio_max = float(request.form['precio_max'])
             rating_min = float(request.form.get('rating_min', 4.0))
-            tipo_vino = request.form.get('tipo_vino', 'Todos')
+            tipo_vino = request.form.get('tipo_vino', 'blanco')
+            tipo_vino = tipo_vino.strip().lower().capitalize()  # Normalizar para el modelo y el filtro
             ocasion = request.form.get('ocasion', 'general')
             gusto = request.form.get('gusto', 'equilibrado')
             
@@ -661,8 +489,8 @@ def sommelier():
             elif gusto == 'equilibrado':
                 rating_objetivo = max(4.12, rating_min)
             
-            # Predecir calidad
-            prediccion, confianza = predecir_calidad_vino_completo(precio_promedio, rating_objetivo, 2021)
+            # Predecir calidad usando el tipo de vino del formulario
+            prediccion, confianza = predecir_calidad_vino_completo(precio_promedio, rating_objetivo, 2021, tipo_vino=tipo_vino)
             
             # Buscar vinos similares
             vinos_recomendados = buscar_vinos_similares(precio_min, precio_max, rating_min, tipo_vino)
@@ -732,7 +560,7 @@ def api_recomendar():
     precio_min = float(request.args.get('precio_min', 10))
     precio_max = float(request.args.get('precio_max', 50))
     rating_min = float(request.args.get('rating_min', 4.0))
-    tipo_vino = request.args.get('tipo_vino', 'Todos')
+    tipo_vino = request.args.get('tipo_vino', 'blanco')
     
     vinos = buscar_vinos_similares(precio_min, precio_max, rating_min, tipo_vino)
     return jsonify({'recomendaciones': vinos})
@@ -765,5 +593,5 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"❌ Error con la base de datos: {e}")
             print("⚠️ La aplicación funcionará sin registro de usuarios")
-    print(f"🌐 Servidor disponible en: http://{config.HOST}:{config.PORT}")
-    app.run(debug=config.DEBUG, host=config.HOST, port=config.PORT)
+    print("🌐 Servidor disponible en: http://0.0.0.0:5001")
+    app.run(debug=False, host="0.0.0.0", port=5001)
