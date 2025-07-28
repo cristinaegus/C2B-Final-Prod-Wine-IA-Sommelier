@@ -133,7 +133,8 @@
 **\wine_analysis
 
 # Models - keep structure but ignore large files
-**\models\trained_models\*.pkl
+#**\models\trained_models\*.pkl
+#
 **\models\trained_models\*_completo_*.pkl
 
 # Virtual environment activation scripts

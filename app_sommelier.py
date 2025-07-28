@@ -31,14 +31,14 @@ app.register_blueprint(admin_bp)
 db.init_app(app)
 bcrypt.init_app(app)
 
-model, scaler = cargar_modelo()
+model, scaler = cargar_modelo
 if model is None or scaler is None:
     print("❌ No se pudieron cargar el modelo o el scaler. Revisa la carpeta static.")
 
 # Cargar el dataset de vinos
 try:
-    df_vinos = pd.read_csv("static/dataset_vinos_combinado_ultra_limpio_20250717_122604.csv")
-    print(f"✅ Datos cargados: static/dataset_vinos_combinado_ultra_limpio_20250717_122604.csv")
+    df_vinos = pd.read_csv("static/dataset_vinos_limpieza_total_final.csv")
+    print(f"✅ Datos cargados: static/dataset_vinos_limpieza_total_final.csv")
     print(f"✅ Total de vinos disponibles: {len(df_vinos)}")
 except Exception as e:
     df_vinos = pd.DataFrame()
@@ -152,13 +152,24 @@ def buscar_vinos_similares(precio_min, precio_max, rating_min=4.0, tipo_vino=Non
         df_top = df_original.sort_values(['rating', 'precio_eur'], ascending=[False, True]).head(6)
         # Limpiar nombres y años para consistencia
         if 'nombre_completo' in df_top.columns:
-            df_top['nombre_limpio'] = df_top['nombre_completo'].apply(limpiar_nombre_vino)
+            df_top['nombre_limpio'] = df_top['nombre_completo']
         elif 'nombre_vino' in df_top.columns:
-            df_top['nombre_limpio'] = df_top['nombre_vino'].apply(limpiar_nombre_vino)
+            df_top['nombre_limpio'] = df_top['nombre_vino']
         else:
             df_top['nombre_limpio'] = "Vino seleccionado"
         df_top['año'] = df_top['año'].apply(limpiar_año)
         return df_top.to_dict('records')
+    # Si hay vinos filtrados, devolverlos como lista de diccionarios
+    if len(vinos_filtrados) > 0:
+        # Limpiar nombres y años para consistencia
+        if 'nombre_completo' in vinos_filtrados.columns:
+            vinos_filtrados['nombre_limpio'] = vinos_filtrados['nombre_completo']
+        elif 'nombre_vino' in vinos_filtrados.columns:
+            vinos_filtrados['nombre_limpio'] = vinos_filtrados['nombre_vino']
+        else:
+            vinos_filtrados['nombre_limpio'] = "Vino seleccionado"
+        vinos_filtrados['año'] = vinos_filtrados['año'].apply(limpiar_año)
+        return vinos_filtrados.to_dict('records')
     
 # Limpiar y convertir rating
 def limpiar_rating(rating_str):
@@ -494,7 +505,21 @@ def sommelier():
             
             # Buscar vinos similares
             vinos_recomendados = buscar_vinos_similares(precio_min, precio_max, rating_min, tipo_vino)
-            
+
+            # Si no hay resultados, obtener los mejores vinos del dataset
+            mejores_vinos = []
+            if not vinos_recomendados or len(vinos_recomendados) == 0:
+                # Seleccionar los mejores 6 vinos del dataset completo (sin filtro)
+                df_top = df_vinos.sort_values(['rating', 'precio_eur'], ascending=[False, True]).head(6)
+                if 'nombre_completo' in df_top.columns:
+                    df_top['nombre_limpio'] = df_top['nombre_completo'].apply(limpiar_nombre_vino)
+                elif 'nombre_vino' in df_top.columns:
+                    df_top['nombre_limpio'] = df_top['nombre_vino'].apply(limpiar_nombre_vino)
+                else:
+                    df_top['nombre_limpio'] = "Vino seleccionado"
+                df_top['año'] = df_top['año'].apply(limpiar_año)
+                mejores_vinos = df_top.to_dict('records')
+
             # Preparar contexto de respuesta
             prediction_text = f"Recomendación: {prediccion}"
 
@@ -518,8 +543,6 @@ def sommelier():
             }
             ocasion_text = ocasion_messages.get(ocasion, ocasion_messages['general'])
 
-
-
             return render_template('sommelier_index2.html',
                                 prediction_text=prediction_text,
                                 quality_category=prediccion,
@@ -527,6 +550,7 @@ def sommelier():
                                 confidence=f"Confianza: {confianza:.1f}%",
                                 ocasion_text=ocasion_text,
                                 vinos_recomendados=vinos_recomendados,
+                                mejores_vinos=mejores_vinos,
                                 show_result=True,
                                 error=False)
 

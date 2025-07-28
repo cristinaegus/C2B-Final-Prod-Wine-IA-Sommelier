@@ -19,10 +19,64 @@
     <link rel="stylesheet" href="/static/style/home.css" />
     <style>
       body {
-        background: url("/static/images/pexels-david-paisajevinos.jpg")
-          no-repeat center center fixed;
+        background-image: url("{{ url_for('static', filename='images/pexels-david-paisajevinos.jpg') }}");
         background-size: cover;
-        min-height: 100vh;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+      .wine-card {
+        border: 2px solid #722f37;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #2c1810 0%, #3d2317 100%);
+        padding: 20px;
+        margin: 10px 0;
+        box-shadow: 0 4px 15px rgba(114, 47, 55, 0.3);
+        transition: transform 0.3s ease;
+      }
+      .wine-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(114, 47, 55, 0.4);
+      }
+      .wine-name {
+        font-size: 1rem;
+        line-height: 1.3;
+        max-height: 2.6em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .sommelier-header {
+        background: linear-gradient(135deg, #722f37 0%, #8b3a3a 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .recommendation-card {
+        background: linear-gradient(135deg, #2d5a27 0%, #3d7c47 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px 0;
+        color: white;
+      }
+      .price-range {
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        display: inline-block;
+        margin: 5px;
+      }
+      .rating-badge {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #8b4513;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: bold;
       }
     </style>
   </head>
@@ -142,7 +196,8 @@
                       id="tipo_vino"
                       name="tipo_vino"
                     >
-                      <option value="tinto" selected>Tinto</option>
+                      <option value="ambos" selected>Ambos</option>
+                      <option value="tinto">Tinto</option>
                       <option value="blanco">Blanco</option>
                     </select>
                   </div>
@@ -167,6 +222,29 @@
                       <option value="4.15">4.15+ (Sobresaliente)</option>
                       <option value="4.2">4.2+ (Excepcional)</option>
                     </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Número de Reseñas -->
+              <div class="col-md-6 mb-3">
+                <div class="parameter-card">
+                  <label for="num_reviews" class="form-label">
+                    <i class="fas fa-users"></i> Número de Reseñas
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">#</span>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="num_reviews"
+                      name="num_reviews"
+                      placeholder="500"
+                      min="0"
+                      max="10000"
+                      value="500"
+                      required
+                    />
                   </div>
                 </div>
               </div>
@@ -257,23 +335,16 @@
             </h4>
 
             <div class="row">
-              {% for vino in vinos_recomendados %}
+              {% set vinos_mostrar =
+              vinos_recomendados|sort(attribute='precio_eur') %} {% for vino in
+              vinos_mostrar[:6] %}
               <div class="col-md-6 mb-3">
                 <div class="wine-card">
                   <!-- Nombre completo del vino -->
                   <div class="mb-2">
                     <h6 class="text-warning mb-1 wine-name">
                       <i class="fas fa-wine-glass"></i>
-                      {% if vino.nombre_completo %} {{
-                      vino.nombre_completo[:120] }}{% if
-                      vino.nombre_completo|length > 120 %}...{% endif %} {% elif
-                      vino.nombre_vino %} {% set wine_name =
-                      vino.nombre_vino.split(',')[0] if ',' in vino.nombre_vino
-                      else vino.nombre_vino %} {% set clean_name =
-                      wine_name.split('4,')[0] if '4,' in wine_name else
-                      wine_name %} {{ clean_name[:120] }}{% if clean_name|length
-                      > 120 %}...{% endif %} {% else %} Vino de {{ vino.bodega
-                      }} {% endif %}
+                      {{ vino.nombre_completo }}
                     </h6>
                     <div
                       class="d-flex justify-content-between align-items-center"
@@ -316,20 +387,13 @@
                   {% endif %}
 
                   <div class="mt-2">
-                    {% if vino.url and vino.url|length > 5 %} {% set url_vivino
-                    = vino.url if vino.url.startswith('http') else 'https://' +
-                    vino.url.lstrip('/') %}
                     <a
-                      href="{{ url_vivino }}"
+                      href="{{ vino.url }}"
                       target="_blank"
-                      rel="noopener noreferrer"
                       class="btn btn-sm btn-outline-warning"
                     >
                       <i class="fas fa-external-link-alt"></i> Ver en Vivino
                     </a>
-                    {% else %}
-                    <span class="text-muted small">Sin enlace Vivino</span>
-                    {% endif %}
                   </div>
                 </div>
               </div>
@@ -394,7 +458,7 @@
 
     <!-- Footer de home.html -->
     <footer class="footer-custom">
-      <div class="container footer-narrow">
+      <div class="container">
         <div class="row">
           <div class="col-md-6">
             <h5><i class="fas fa-wine-glass-alt"></i> Wine IA</h5>
